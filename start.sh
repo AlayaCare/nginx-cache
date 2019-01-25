@@ -8,13 +8,23 @@ fi
 
 if [ -z "$HOST_HEADER" ]
 then
-    export HOST_HEADER='$host'
+    export HOST_HEADER=$(echo "$BACKEND" | sed -E -e 's|(.*https?://)?([^/@]+@)?([^/:]+).*|\3|')
 fi
 
-cat /etc/nginx/conf.d/cache.conf.template | \
-   envsubst '$BACKEND' | \
-   envsubst '$HOST_HEADER' > \
-   /etc/nginx/conf.d/cache.conf
+export INACTIVE=${INACTIVE:-'5m'}
+export MAX_SIZE=${MAX_SIZE:-'20m'}
 
-#exec nginx -g 'daemon off;'
+echo "BACKEND: $BACKEND"
+echo "HOST_HEADER: $HOST_HEADER"
+echo "INACTIVE: $INACTIVE"
+echo "MAX_SIZE: $MAX_SIZE"
+
+cat /etc/nginx/conf.d/cache.conf.template \
+   | envsubst '$BACKEND' \
+   | envsubst '$HOST_HEADER' \
+   | envsubst '$INACTIVE' \
+   | envsubst '$MAX_SIZE' \
+   > /etc/nginx/conf.d/default.conf
+
+echo "exec ""$@"
 exec "$@"

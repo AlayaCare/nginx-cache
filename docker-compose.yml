@@ -4,8 +4,11 @@ services:
         image: quay.io/alayacare/nginx-cache:latest
         environment:
             BACKEND: https://nabu-nonprod.alayacare.net/
-            #HOST_HEADER: nabu.alayacare.net
             #BACKEND: 10.20.0.118
+            #HOST_HEADER: nabu.alayacare.net
+            #HOST_HEADER: $host
+            #INACTIVE: 5m
+            #MAX_SIZE: 20m
         tmpfs:
         - /tmp/nginx/cache
 
