@@ -23,3 +23,5 @@ total 0
 lrwxrwxrwx 1 root root 11 Jan 22 23:28 access.log -> /dev/stdout
 lrwxrwxrwx 1 root root 11 Jan 22 23:28 error.log -> /dev/stderr
 ```
+
+The log format was changed to include HIT/MISS info.
