@@ -1,0 +1,11 @@
+version: "2"
+services:
+    nginx-cache:
+        image: quay.io/alayacare/nginx-cache:latest
+        environment:
+            BACKEND: https://nabu-nonprod.alayacare.net/
+            #HOST_HEADER: nabu.alayacare.net
+            #BACKEND: 10.20.0.118
+        tmpfs:
+        - /tmp/nginx/cache
+
