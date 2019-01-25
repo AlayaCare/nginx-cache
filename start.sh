@@ -19,12 +19,12 @@ echo "HOST_HEADER: $HOST_HEADER"
 echo "INACTIVE: $INACTIVE"
 echo "MAX_SIZE: $MAX_SIZE"
 
-cat /etc/nginx/conf.d/cache.conf.template \
+cat /etc/nginx/nginx.conf.template \
    | envsubst '$BACKEND' \
    | envsubst '$HOST_HEADER' \
    | envsubst '$INACTIVE' \
    | envsubst '$MAX_SIZE' \
-   > /etc/nginx/conf.d/default.conf
+   > /etc/nginx/nginx.conf
 
 echo "exec ""$@"
 exec "$@"

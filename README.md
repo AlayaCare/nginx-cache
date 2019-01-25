@@ -1,6 +1,6 @@
 ## Nginx Cache
 
-Simple caching proxy for Nabu. Configure with these variables:
+Simple caching proxy using Ngnix. Configure with these variables:
 
  * **BACKEND** (required) Value for [proxy_pass][proxy_pass] directive.
  * **HOST_HEADER** (optional) Value for `Host` header to be sent to the backend.
@@ -11,3 +11,15 @@ Simple caching proxy for Nabu. Configure with these variables:
 
 [proxy_pass]: http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_pass
 [proxy_cache_path]: http://nginx.org/en/docs/http/ngx_http_proxy_module.html#proxy_cache_path
+
+
+### Logging
+
+The `nginx:stable` image this is based on redirects its logs to the standard outputs:
+
+```
+# ls -l /var/log/nginx/
+total 0
+lrwxrwxrwx 1 root root 11 Jan 22 23:28 access.log -> /dev/stdout
+lrwxrwxrwx 1 root root 11 Jan 22 23:28 error.log -> /dev/stderr
+```

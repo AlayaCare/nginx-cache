@@ -1,6 +1,6 @@
 FROM nginx:stable
 
-COPY nginx.conf /etc/nginx/conf.d/cache.conf.template
+COPY nginx.conf /etc/nginx/nginx.conf.template
 ADD start.sh /usr/local/bin/
 RUN mkdir -p /tmp/nginx/cache && chmod +x /usr/local/bin/start.sh
 
