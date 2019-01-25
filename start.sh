@@ -16,4 +16,5 @@ cat /etc/nginx/conf.d/cache.conf.template | \
    envsubst '$HOST_HEADER' > \
    /etc/nginx/conf.d/cache.conf
 
-exec nginx -g 'daemon off;'
+#exec nginx -g 'daemon off;'
+exec "$@"
