@@ -17,9 +17,6 @@ function main() {
         export HOST_HEADER=$(host_header "$BACKEND")
     fi
 
-    export INACTIVE=${INACTIVE:-'5m'}
-    export MAX_SIZE=${MAX_SIZE:-'20m'}
-
     echo "BACKEND: $BACKEND"
     echo "HOST_HEADER: $HOST_HEADER"
     echo "INACTIVE: $INACTIVE"
