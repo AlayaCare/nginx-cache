@@ -1,3 +1,5 @@
+# this is a template for nginx.conf, meant to be
+# rendered with Go's tmpl tool
 
 user  nginx;
 worker_processes  1;
@@ -5,11 +7,9 @@ worker_processes  1;
 error_log  /var/log/nginx/error.log warn;
 pid        /var/run/nginx.pid;
 
-
 events {
     worker_connections  1024;
 }
-
 
 http {
     include       /etc/nginx/mime.types;
@@ -22,27 +22,32 @@ http {
     access_log  /var/log/nginx/access.log  main;
 
     sendfile        on;
-    #tcp_nopush     on;
-
     keepalive_timeout  65;
 
-    #gzip  on;
-
-    proxy_cache_path /tmp/nginx/cache levels=1:2 keys_zone=nginx_cache:20m inactive=$INACTIVE max_size=$MAX_SIZE;
+    proxy_cache_path
+        /tmp/nginx/cache
+        levels=1:2
+        keys_zone=nginx_cache:20m
+        inactive={{.inactive}}
+        max_size={{.max_size}};
 
     server {
         server_name _;
         listen *:80 default_server;
 
         location / {
-            proxy_pass $BACKEND;
-            proxy_set_header    Host $HOST_HEADER;
+            resolver 127.0.0.1 valid=30s;
+            resolver_timeout 15s;
+            set $backend "{{.backend}}";
+            proxy_pass $backend;
+
             proxy_cache nginx_cache;
             proxy_cache_key $scheme$proxy_host$uri$is_args$args$http_authorization;
             proxy_cache_revalidate on;
             proxy_cache_use_stale error timeout updating http_500 http_502 http_503 http_504;
             proxy_cache_background_update on;
             proxy_cache_lock on;
+
             add_header X-Cache-Status $upstream_cache_status;
         }
     }

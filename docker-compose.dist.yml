@@ -3,10 +3,8 @@ services:
     nginx-cache:
         image: quay.io/alayacare/nginx-cache:latest
         environment:
-            BACKEND: https://server.example.com/
-            #HOST_HEADER: server.example.com
-            #HOST_HEADER: server.example.com:8080
-            #HOST_HEADER: $host
+            BACKEND: server.example.com:443
+            #BACKENDS: b1.example.com:443 b2.example.com:443
             #INACTIVE: 5m
             #MAX_SIZE: 20m
         tmpfs:
