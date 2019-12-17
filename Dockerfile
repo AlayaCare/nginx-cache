@@ -4,8 +4,10 @@ ENV INACTIVE 15m
 ENV MAX_SIZE 20m
 
 RUN apt-get update && \
-    apt-get -y install tmpl dnsmasq jq && \
+    apt-get -y install dnsmasq && \
     rm -rf /var/lib/apt/lists/*
+
+COPY --from=hairyhenderson/gomplate:v3.6.0-slim /gomplate /usr/local/bin/gomplate
 
 COPY nginx.conf.tmpl /etc/nginx/nginx.conf.tmpl
 ADD start.sh /usr/local/bin/

@@ -1,5 +1,5 @@
 # this is a template for nginx.conf, meant to be
-# rendered with Go's tmpl tool
+# rendered with Gomplate (https://gomplate.ca/)
 
 user  nginx;
 worker_processes  1;
@@ -24,7 +24,12 @@ http {
     sendfile        on;
     keepalive_timeout  65;
 
-    proxy_cache_path /tmp/nginx/cache levels=1:2 keys_zone=nginx_cache:20m inactive={{.inactive}} max_size={{.max_size}};
+    proxy_cache_path
+        /tmp/nginx/cache
+        levels=1:2
+        keys_zone=nginx_cache:20m
+        inactive={{.Env.INACTIVE}}
+        max_size={{.Env.MAX_SIZE}};
 
     server {
         server_name _;
@@ -33,7 +38,7 @@ http {
         location / {
             resolver 127.0.0.1 valid=30s;
             resolver_timeout 15s;
-            set $backend "{{.backend}}";
+            set $backend {{quote .Env.BACKEND}};
             proxy_pass $backend;
 
             proxy_cache nginx_cache;
@@ -46,5 +51,4 @@ http {
             add_header X-Cache-Status $upstream_cache_status;
         }
     }
-
 }

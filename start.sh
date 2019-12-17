@@ -6,14 +6,12 @@ then
     exit 1
 fi
 
-DATA=$(jq -n '{
-    "backend": env.BACKEND,
-    "inactive": env.INACTIVE,
-    "max_size": env.MAX_SIZE,
-}')
-echo -e "Running with config: $DATA"
+echo "Running with config:"
+echo "   BACKEND: $BACKEND"
+echo "  INACTIVE: $INACTIVE"
+echo "  MAX_SIZE: $MAX_SIZE"
 
-tmpl -data "$DATA" /etc/nginx/nginx.conf.tmpl
+gomplate -f /etc/nginx/nginx.conf.tmpl -o /etc/nginx/nginx.conf
 
 dnsmasq -u root -a 127.0.0.1 -z
 exec "$@"
