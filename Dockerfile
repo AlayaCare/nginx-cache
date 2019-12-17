@@ -4,7 +4,7 @@ ENV INACTIVE 15m
 ENV MAX_SIZE 20m
 
 RUN apt-get update && \
-    apt-get -y install tmpl dnsmasq && \
+    apt-get -y install tmpl dnsmasq jq && \
     rm -rf /var/lib/apt/lists/*
 
 COPY nginx.conf.tmpl /etc/nginx/nginx.conf.tmpl
