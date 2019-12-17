@@ -6,15 +6,13 @@ then
     exit 1
 fi
 
-DATA='
-{
-    "backend": "'$BACKEND'",
-    "inactive": "'$INACTIVE'",
-    "max_size": "'$MAX_SIZE'"
-}'
+DATA=$(jq -n '{
+    "backend": env.BACKEND,
+    "inactive": env.INACTIVE,
+    "max_size": env.MAX_SIZE,
+}')
 echo -e "Running with config: $DATA"
 
-# render with tmpl
 tmpl -data "$DATA" /etc/nginx/nginx.conf.tmpl
 
 dnsmasq -u root -a 127.0.0.1 -z
