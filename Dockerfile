@@ -11,6 +11,4 @@ COPY nginx.conf.tmpl /etc/nginx/nginx.conf.tmpl
 ADD start.sh /usr/local/bin/
 RUN mkdir -p /tmp/nginx/cache && chmod +x /usr/local/bin/start.sh
 
-ENTRYPOINT [ "/usr/local/bin/start.sh" ]
-CMD ["nginx", "-g", "daemon off;"]
-
+CMD ["/usr/local/bin/start.sh"]

@@ -15,5 +15,8 @@ echo -e "Running with config: $DATA"
 
 tmpl -data "$DATA" /etc/nginx/nginx.conf.tmpl
 
-dnsmasq -u root -a 127.0.0.1 -z
-exec "$@"
+dnsmasq -u root -a 127.0.0.1 -z -k &
+nginx -g "daemon off;" &
+
+# poor man's supervisor: if any child dies, kill the rest
+wait -nf && kill -9 $(jobs -p)
