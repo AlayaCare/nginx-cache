@@ -1,35 +1,28 @@
 #!groovy
 
+@Library('alayacare@v0.7.24') _
+
 node('build') {
     def dockerImage
-    String branchName
-    Boolean shouldPushImage = false
-
-    if (env.CHANGE_ID) {
-        // pull request build
-        branchName = CHANGE_BRANCH
-        shouldPushImage = false
-    } else {
-        // branch build
-        branchName = BRANCH_NAME
-        shouldPushImage = true
-    }
+    String repository = env.JOB_NAME.split('/')[1]
 
     try {
-        String dockerTag = 'alayacare/nginx-proxy:' + branchName.replaceAll('/', '-')
+        String buildTag = UUID.randomUUID().toString()
+        dockerLockName = "docker_lock_${buildTag}"
 
         stage('Git Checkout') {
             checkout scm
         }
 
         stage('Build Docker Image') {
-            dockerImage = docker.build(dockerTag)
+            dockerImage = docker.build(buildTag)
+
         }
 
         try {
             // only push when building by branch and if tests pass
-            docker.withRegistry('https://quay.io', 'quay-jenkins') {
-                dockerImage.push()
+            lock(dockerLockName) {
+                ci.pushDockerImageToRegistry(dockerImage: dockerImage, repository: repository)
             }
         } catch(exception) {
             println(exception)
@@ -40,7 +33,12 @@ node('build') {
         println(exception)
         throw exception
     } finally {
+        lock(dockerLockName) {
+            if (dockerImage) {
+                sh("docker rmi ${dockerImage.id} || true")
+            }
+        }
+
         cleanWs()
     }
 }
-
